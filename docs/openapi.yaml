@@ -5,40 +5,46 @@ info:
 paths:
   "/stamps":
     get:
+      tags:
+        - stamp
       parameters:
         - $ref: "#/components/parameters/offset"
       responses:
         "200":
-          description: 成功
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Stamp"
+          $ref: "#/components/responses/stamps"
+      operationId: getStamps
     post:
+      tags:
+        - stamp
       requestBody:
-        $ref: "#/components/requestBodies/Stamps"
+        $ref: "#/components/requestBodies/stampRequest"
       responses:
         "200":
           $ref: "#/components/responses/stampId"
-  "/stamps/{stamp_id}":
+      operationId: createStamp
+  "/stamps/{stampId}":
     get:
+      tags:
+        - stamp
       parameters:
-        - $ref: "#/components/parameters/stamp_id"
+        - $ref: "#/components/parameters/stampId"
       responses:
         "200":
           $ref: "#/components/responses/stamp"
+      operationId: getStamp
     delete:
+      tags:
+        - stamp
       parameters:
-        - $ref: "#/components/parameters/stamp_id"
+        - $ref: "#/components/parameters/stampId"
       responses:
         "204":
           description: "success"
+      operationId: deleteStamp
 components:
   parameters:
-    stamp_id:
-      name: stamp_id
+    stampId:
+      name: stampId
       in: path
       description: uuid
       required: true
@@ -56,7 +62,7 @@ components:
       schema:
         type: integer
   requestBodies:
-    Stamps:
+    stampRequest:
       required: true
       content:
         application/json:
@@ -69,6 +75,14 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/Stamp"
+    stamps:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/Stamp"
     stampId:
       description: 成功
       content:
