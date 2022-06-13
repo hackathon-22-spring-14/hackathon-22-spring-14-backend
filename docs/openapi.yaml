@@ -7,6 +7,7 @@ paths:
     get:
       tags:
         - stamp
+      description: stampの一覧取得
       parameters:
         - $ref: "#/components/parameters/offset"
       responses:
@@ -16,6 +17,7 @@ paths:
     post:
       tags:
         - stamp
+      description: stampを登録
       requestBody:
         $ref: "#/components/requestBodies/stampRequest"
       responses:
@@ -26,6 +28,7 @@ paths:
     get:
       tags:
         - stamp
+      description: stampを取得
       parameters:
         - $ref: "#/components/parameters/stampId"
       responses:
@@ -35,6 +38,7 @@ paths:
     delete:
       tags:
         - stamp
+      description: stampを削除
       parameters:
         - $ref: "#/components/parameters/stampId"
       responses:
