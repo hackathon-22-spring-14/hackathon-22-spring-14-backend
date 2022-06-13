@@ -1,0 +1,94 @@
+openapi: "3.0.0"
+info:
+  title: hackathon-22-spring-14 # TODO: 後で変更
+  version: 0.0.1
+paths:
+  "/stamps":
+    get:
+      parameters:
+        - $ref: "#/components/parameters/offset"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Stamp"
+    post:
+      requestBody:
+        $ref: "#/components/requestBodies/Stamps"
+      responses:
+        "200":
+          $ref: "#/components/responses/stampId"
+  "/stamps/{stamp_id}":
+    get:
+      parameters:
+        - $ref: "#/components/parameters/stamp_id"
+      responses:
+        "200":
+          $ref: "#/components/responses/stamp"
+    delete:
+      parameters:
+        - $ref: "#/components/parameters/stamp_id"
+      responses:
+        "204":
+          description: "success"
+components:
+  parameters:
+    stamp_id:
+      name: stamp_id
+      in: path
+      description: uuid
+      required: true
+      style: simple
+      explode: true
+      schema:
+        $ref: "#/components/schemas/Stamp/properties/id"
+    offset:
+      name: offset
+      in: query
+      description: 取得上限
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: integer
+  requestBodies:
+    Stamps:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Stamp"
+  responses:
+    stamp:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Stamp"
+    stampId:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                $ref: "#/components/schemas/Stamp/properties/id"
+  schemas:
+    Stamp:
+      type: object
+      properties:
+        id:
+          type: string
+          description: uuid
+        name:
+          type: string
+          description: スタンプの名前
+        image:
+          type: string
+          format: byte
+          description: base64エンコードされた画像
