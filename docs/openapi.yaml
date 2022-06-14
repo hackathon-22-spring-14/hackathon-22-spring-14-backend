@@ -9,6 +9,7 @@ paths:
         - stamp
       description: stampの一覧取得
       parameters:
+        - $ref: "#/components/parameters/limit"
         - $ref: "#/components/parameters/offset"
       responses:
         "200":
@@ -59,11 +60,20 @@ components:
     offset:
       name: offset
       in: query
-      description: 取得上限
+      description: 何番目からのstampを取るか
       required: false
       style: form
       explode: true
       schema:
+        type: integer
+    limit:
+      name: limit
+      in: query
+      description: 取得上限
+      required: false
+      style: form
+      explode: true
+      schema: 
         type: integer
   requestBodies:
     stampRequest:
