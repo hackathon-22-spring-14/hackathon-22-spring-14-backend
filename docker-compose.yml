@@ -1,0 +1,23 @@
+version: '3.4'
+
+services:
+  app:
+    build: .
+    restart: always
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/app
+    expose:
+      - '3000'
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0.29
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: hackathon
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+    volumes:
+      - ./mysql/init:/docker-entrypoint-initdb.d
