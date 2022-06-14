@@ -3,6 +3,8 @@ package impl
 import (
 	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/model"
 	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/repository"
+
+	_ "github.com/go-sql-driver/mysql" // import driver
 	"github.com/jmoiron/sqlx"
 )
 

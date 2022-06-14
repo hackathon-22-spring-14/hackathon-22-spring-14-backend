@@ -28,7 +28,7 @@ func main() {
 
 func getDSN() string {
 	return fmt.Sprintf(
-		"%s:%s@tcp(%s:%s)/%s",
+		"%s:%s@tcp(%s:%s)/%s?parseTime=True&loc=Asia%%2FTokyo&charset=utf8mb4",
 		getEnvOrDefault("MYSQL_USER", "root"),
 		getEnvOrDefault("MYSQL_PASSWORD", "password"),
 		getEnvOrDefault("MYSQL_HOST", "localhost"),
