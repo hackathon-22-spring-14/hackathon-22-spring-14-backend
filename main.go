@@ -7,11 +7,14 @@ import (
 
 	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/router"
 	"github.com/jmoiron/sqlx"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/echo/v4"
 )
 
 func main() {
 	e := echo.New()
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 
 	db, err := sqlx.Open("mysql", getDSN())
 	if err != nil {
