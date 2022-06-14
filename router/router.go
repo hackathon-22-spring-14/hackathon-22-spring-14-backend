@@ -7,7 +7,7 @@ import (
 )
 
 func Setup(e *echo.Echo, db *sqlx.DB) {
-	sh := NewStampHandler(impl.NewStampRepository(db))
+	sh := NewStampHandler(impl.NewStampRepository(db)) //いくら用メモ--shには、dbの入ったstampRepositoryの入ったstampHandlerが入っているけど、StampHandlerで返り値を指定しているから、GetStampsを呼び出せる。
 
 	api := e.Group("/api")
 	apiStamps := api.Group("/stamps")
