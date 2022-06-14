@@ -23,7 +23,7 @@ type stampHandler struct {
 	r repository.StampRepository
 }
 
-func NewstampHandler(r repository.StampRepository) StampHandler {
+func NewStampHandler(r repository.StampRepository) StampHandler {
 	return &stampHandler{r}
 }
 

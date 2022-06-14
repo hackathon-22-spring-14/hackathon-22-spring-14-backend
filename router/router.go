@@ -7,7 +7,7 @@ import (
 )
 
 func Setup(e *echo.Echo, db *sqlx.DB) {
-	sh := NewstampHandler(impl.NewStampRepository(db))
+	sh := NewStampHandler(impl.NewStampRepository(db))
 
 	api := e.Group("/api")
 	apiStamps := api.Group("/stamps")
