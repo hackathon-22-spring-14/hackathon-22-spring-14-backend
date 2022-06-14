@@ -26,5 +26,5 @@ func (h *stampHandler) GetStamps(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, s)
+	return echo.NewHTTPError(http.StatusOK, s)
 }
