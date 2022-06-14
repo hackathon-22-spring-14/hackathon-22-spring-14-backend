@@ -21,7 +21,12 @@ func NewstampHandler(r repository.StampRepository) StampHandler {
 }
 
 func (h *stampHandler) GetStamps(c echo.Context) error {
-	s, err := h.r.FindAll()
+	params, err := repository.NewFindAllParams(c.QueryParam("limit"), c.QueryParam("offset"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	s, err := h.r.FindAll(params)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}

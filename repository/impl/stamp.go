@@ -16,10 +16,10 @@ func NewStampRepository(db *sqlx.DB) repository.StampRepository {
 	return &stampRepository{db}
 }
 
-func (r *stampRepository) FindAll() ([]model.Stamp, error) {
+func (r *stampRepository) FindAll(params *repository.FindAllParams) ([]model.Stamp, error) {
 	var stamps []model.Stamp
 
-	err := r.db.Select(&stamps, "SELECT * FROM stamps")
+	err := r.db.Select(&stamps, "SELECT * FROM stamps LIMIT ? OFFSET ?", params.Limit, params.Offset)
 	if err != nil {
 		return nil, err
 	}
