@@ -1,0 +1,112 @@
+openapi: "3.0.0"
+info:
+  title: hackathon-22-spring-14 # TODO: 後で変更
+  version: 0.0.1
+paths:
+  "/stamps":
+    get:
+      tags:
+        - stamp
+      description: stampの一覧取得
+      parameters:
+        - $ref: "#/components/parameters/offset"
+      responses:
+        "200":
+          $ref: "#/components/responses/stamps"
+      operationId: getStamps
+    post:
+      tags:
+        - stamp
+      description: stampを登録
+      requestBody:
+        $ref: "#/components/requestBodies/stampRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/stampId"
+      operationId: createStamp
+  "/stamps/{stampId}":
+    get:
+      tags:
+        - stamp
+      description: stampを取得
+      parameters:
+        - $ref: "#/components/parameters/stampId"
+      responses:
+        "200":
+          $ref: "#/components/responses/stamp"
+      operationId: getStamp
+    delete:
+      tags:
+        - stamp
+      description: stampを削除
+      parameters:
+        - $ref: "#/components/parameters/stampId"
+      responses:
+        "204":
+          description: "success"
+      operationId: deleteStamp
+components:
+  parameters:
+    stampId:
+      name: stampId
+      in: path
+      description: uuid
+      required: true
+      style: simple
+      explode: true
+      schema:
+        $ref: "#/components/schemas/Stamp/properties/id"
+    offset:
+      name: offset
+      in: query
+      description: 取得上限
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: integer
+  requestBodies:
+    stampRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Stamp"
+  responses:
+    stamp:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Stamp"
+    stamps:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/Stamp"
+    stampId:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                $ref: "#/components/schemas/Stamp/properties/id"
+  schemas:
+    Stamp:
+      type: object
+      properties:
+        id:
+          type: string
+          description: uuid
+        name:
+          type: string
+          description: スタンプの名前
+        image:
+          type: string
+          format: byte
+          description: base64エンコードされた画像
