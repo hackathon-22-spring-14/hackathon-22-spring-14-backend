@@ -4,6 +4,8 @@ services:
   app:
     build: .
     restart: always
+    environment:
+      - MYSQL_HOST=hackathon-22-spring-14-backend-db-1
     ports:
       - '3000:3000'
     volumes:

@@ -24,16 +24,14 @@ func NewStampRepository(db *sqlx.DB) repository.StampRepository {
 }
 
 func (r *stampRepository) FindAll(params *repository.FindAllParams) ([]model.Stamp, error) {
-	var (
-		stamps  []Stamp
-		mstamps []model.Stamp
-	)
+	stamps := []Stamp{}
 
 	err := r.db.Select(&stamps, "SELECT * FROM stamps LIMIT ? OFFSET ?", params.Limit, params.Offset)
 	if err != nil {
 		return nil, err
 	}
 
+	mstamps := make([]model.Stamp, len(stamps))
 	for i, s := range stamps {
 		mstamps[i] = model.Stamp{
 			ID:    s.ID,
