@@ -13,4 +13,5 @@ func Setup(e *echo.Echo, db *sqlx.DB) {
 	apiStamps := api.Group("/stamps")
 
 	apiStamps.GET("", sh.GetStamps)
+	apiStamps.GET("/:stampID", sh.GetStamp)
 }

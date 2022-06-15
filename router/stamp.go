@@ -17,6 +17,8 @@ type Stamp struct {
 type StampHandler interface {
 	// GET /stamps
 	GetStamps(c echo.Context) error
+	// GET /stamps/{stampID}
+	GetStamp(c echo.Context) error
 }
 
 type stampHandler struct {
@@ -48,4 +50,13 @@ func (h *stampHandler) GetStamps(c echo.Context) error {
 	}
 
 	return echo.NewHTTPError(http.StatusOK, stamps)
+}
+
+func (h *stampHandler) GetStamp(c echo.Context) error {
+	param := c.Param("stampID")
+	mstamp, err := h.r.FindOne(param)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	return echo.NewHTTPError(http.StatusOK, mstamp)
 }
