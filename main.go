@@ -4,26 +4,37 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/router"
 	"github.com/jmoiron/sqlx"
-	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
-	e := echo.New()
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-
 	db, err := sqlx.Open("mysql", getDSN())
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	for i := 0; i < 10; i++ {
+		if err := db.DB.Ping(); err == nil {
+			break
+		} else if i == 9 {
+			log.Fatal(err)
+		}
+
+		time.Sleep(time.Second * time.Duration(i+1))
+	}
+
+	e := echo.New()
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+
 	router.Setup(e, db)
 
-	log.Fatal(e.Start(":3000"))
+	e.Logger.Fatal(e.Start(":3000"))
 }
 
 func getDSN() string {
