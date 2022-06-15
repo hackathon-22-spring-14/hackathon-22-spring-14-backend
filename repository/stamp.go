@@ -9,7 +9,7 @@ import (
 
 type StampRepository interface {
 	FindAll(params *FindAllParams) ([]model.Stamp, error)
-	FindOne(stampID string) (model.Stamp, error)
+	FindByID(stampID string) (model.Stamp, error)
 }
 
 type FindAllParams struct {

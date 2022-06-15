@@ -54,7 +54,7 @@ func (h *stampHandler) GetStamps(c echo.Context) error {
 
 func (h *stampHandler) GetStamp(c echo.Context) error {
 	param := c.Param("stampID")
-	mstamp, err := h.r.FindOne(param)
+	mstamp, err := h.r.FindByID(param)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
