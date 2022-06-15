@@ -1,0 +1,10 @@
+linters:
+  disable:
+    - structcheck # go1.18 unsupported
+  enable:
+    - nlreturn
+    - ifshort
+    - predeclared
+    - revive
+    - tagliatelle
+    # and default linters...
