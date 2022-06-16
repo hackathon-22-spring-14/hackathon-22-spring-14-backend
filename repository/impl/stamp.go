@@ -43,6 +43,21 @@ func (r *stampRepository) FindAll(params *repository.FindAllParams) ([]model.Sta
 	return mstamps, nil
 }
 
+func (r *stampRepository) FindByID(stampID string) (model.Stamp, error) {
+	stamp := Stamp{}
+	err := r.db.Get(&stamp, "select * from stamps where id=?", stampID)
+	if err != nil {
+		return model.Stamp{}, err
+	}
+	mstamp := model.Stamp{
+		ID:    stamp.ID,
+		Name:  stamp.Name,
+		Image: getImage(stamp.ImageURL),
+	}
+
+	return mstamp, nil
+}
+
 // TODO: ストレージから取得する
 func getImage(url string) []byte {
 	return []byte("aG9nZWhvZ2Vob2dlaG9nZQ==")
