@@ -5,5 +5,5 @@ import "github.com/google/uuid"
 type Stamp struct {
 	ID    uuid.UUID
 	Name  string
-	Image []byte
+	Image string
 }

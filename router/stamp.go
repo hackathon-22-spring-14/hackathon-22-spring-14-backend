@@ -45,7 +45,7 @@ func (h *stampHandler) GetStamps(c echo.Context) error {
 		stamps[i] = Stamp{
 			ID:    ms.ID,
 			Name:  ms.Name,
-			Image: string(ms.Image),
+			Image: ms.Image,
 		}
 	}
 
@@ -61,7 +61,7 @@ func (h *stampHandler) GetStamp(c echo.Context) error {
 	stamp := Stamp{
 		ID:    mstamp.ID,
 		Name:  mstamp.Name,
-		Image: string(mstamp.Image),
+		Image: mstamp.Image,
 	}
 
 	return c.JSON(http.StatusOK, stamp)
