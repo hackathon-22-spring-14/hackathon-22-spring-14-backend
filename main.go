@@ -9,7 +9,6 @@ import (
 	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/router"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
@@ -29,9 +28,6 @@ func main() {
 	}
 
 	e := echo.New()
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-
 	router.Setup(e, db)
 
 	e.Logger.Fatal(e.Start(":3000"))
