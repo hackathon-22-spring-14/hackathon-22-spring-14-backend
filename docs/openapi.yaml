@@ -20,7 +20,11 @@ paths:
         - stamp
       description: stampを登録
       requestBody:
-        $ref: "#/components/requestBodies/stampRequest"
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/PostStamp"
       responses:
         "200":
           $ref: "#/components/responses/stampId"
@@ -75,13 +79,6 @@ components:
       explode: true
       schema:
         type: integer
-  requestBodies:
-    stampRequest:
-      required: true
-      content:
-        multipart/form-data:
-          schema:
-            $ref: "#/components/schemas/PostStamp"
   responses:
     stamp:
       description: 成功
