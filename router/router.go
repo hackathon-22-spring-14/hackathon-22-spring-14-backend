@@ -19,4 +19,5 @@ func Setup(e *echo.Echo, db *sqlx.DB) {
 
 	apiStamps.GET("", sh.GetStamps)
 	apiStamps.GET("/:stampID", sh.GetStamp)
+	apiStamps.DELETE("/:stampID", sh.DeleteStamp)
 }

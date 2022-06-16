@@ -19,6 +19,8 @@ type StampHandler interface {
 	GetStamps(c echo.Context) error
 	// GET /stamps/{stampID}
 	GetStamp(c echo.Context) error
+	// DELETE /stamps/{stampID}
+	DeleteStamp(c echo.Context) error
 }
 
 type stampHandler struct {
@@ -65,4 +67,13 @@ func (h *stampHandler) GetStamp(c echo.Context) error {
 	}
 
 	return echo.NewHTTPError(http.StatusOK, stamp)
+}
+
+func (h *stampHandler) DeleteStamp(c echo.Context) error {
+	param := c.Param("stampID")
+	if err := h.r.DeleteByID(param); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.NoContent(http.StatusNoContent)
 }
