@@ -81,13 +81,7 @@ components:
       content:
         multipart/form-data:
           schema:
-            type: object
-            properties:
-              name:
-                $ref: "#/components/schemas/Stamp/properties/name"
-              image:
-                type: string
-                format: binary
+            $ref: "#/components/schemas/PostStamp"
   responses:
     stamp:
       description: 成功
@@ -129,5 +123,15 @@ components:
       type: string
       format: uuid
       description: uuid
+    PostStamp:
+      type: object
+      properties:
+        name:
+          type: string
+          description: スタンプの名前
+        image:
+          type: string
+          format: binary
+          description: スタンプ画像
 tags:
   - name: stamp
