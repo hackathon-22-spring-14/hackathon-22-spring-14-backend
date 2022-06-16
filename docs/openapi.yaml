@@ -56,7 +56,7 @@ components:
       style: simple
       explode: true
       schema:
-        $ref: "#/components/schemas/Stamp/properties/id"
+        $ref: "#/components/schemas/Id"
     offset:
       name: offset
       in: query
@@ -73,7 +73,7 @@ components:
       required: false
       style: form
       explode: true
-      schema: 
+      schema:
         type: integer
   requestBodies:
     stampRequest:
@@ -105,14 +105,13 @@ components:
             type: object
             properties:
               id:
-                $ref: "#/components/schemas/Stamp/properties/id"
+                $ref: "#/components/schemas/Id"
   schemas:
     Stamp:
       type: object
       properties:
         id:
-          type: string
-          description: uuid
+          $ref: "#/components/schemas/Id"
         name:
           type: string
           description: スタンプの名前
@@ -120,3 +119,9 @@ components:
           type: string
           format: byte
           description: base64エンコードされた画像
+    Id:
+      type: string
+      format: uuid
+      description: uuid
+tags:
+  - name: stamp
