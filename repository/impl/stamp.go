@@ -54,6 +54,7 @@ func (r *stampRepository) FindByID(stampID string) (model.Stamp, error) {
 		Name:  stamp.Name,
 		Image: getImage(stamp.ImageURL),
 	}
+
 	return mstamp, nil
 }
 
