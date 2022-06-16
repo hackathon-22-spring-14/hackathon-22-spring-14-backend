@@ -11,7 +11,7 @@ import (
 type Stamp struct {
 	ID    uuid.UUID `json:"id"`
 	Name  string    `json:"name"`
-	Image []byte    `json:"image"`
+	Image string    `json:"image"`
 }
 
 type StampHandler interface {
@@ -45,11 +45,11 @@ func (h *stampHandler) GetStamps(c echo.Context) error {
 		stamps[i] = Stamp{
 			ID:    ms.ID,
 			Name:  ms.Name,
-			Image: ms.Image,
+			Image: string(ms.Image),
 		}
 	}
 
-	return echo.NewHTTPError(http.StatusOK, stamps)
+	return c.JSON(http.StatusOK, stamps)
 }
 
 func (h *stampHandler) GetStamp(c echo.Context) error {
@@ -61,8 +61,8 @@ func (h *stampHandler) GetStamp(c echo.Context) error {
 	stamp := Stamp{
 		ID:    mstamp.ID,
 		Name:  mstamp.Name,
-		Image: mstamp.Image,
+		Image: string(mstamp.Image),
 	}
 
-	return echo.NewHTTPError(http.StatusOK, stamp)
+	return c.JSON(http.StatusOK, stamp)
 }
