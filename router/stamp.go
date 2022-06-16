@@ -58,5 +58,10 @@ func (h *stampHandler) GetStamp(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	return echo.NewHTTPError(http.StatusOK, mstamp)
+	stamp := Stamp{
+		ID:    mstamp.ID,
+		Name:  mstamp.Name,
+		Image: mstamp.Image,
+	}
+	return echo.NewHTTPError(http.StatusOK, stamp)
 }
