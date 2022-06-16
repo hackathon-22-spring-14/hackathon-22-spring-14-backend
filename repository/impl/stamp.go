@@ -58,6 +58,15 @@ func (r *stampRepository) FindByID(stampID string) (model.Stamp, error) {
 	return mstamp, nil
 }
 
+func (r *stampRepository) DeleteByID(stampID string) error {
+	_, err := r.db.Exec("delete from stamps where ID=?", stampID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // TODO: ストレージから取得する
 func getImage(url string) []byte {
 	return []byte("aG9nZWhvZ2Vob2dlaG9nZQ==")
