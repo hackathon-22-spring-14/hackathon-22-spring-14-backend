@@ -48,7 +48,7 @@ func (r *stampRepository) FindByID(stampID string) (model.Stamp, error) {
 	err := r.db.Get(&stamp, "select * from stamps where id=?", stampID)
 	if err != nil {
 		return model.Stamp{}, err
-	} //ここの下にmodel.Stampを作るやつを書く
+	}
 	mstamp := model.Stamp{
 		ID:    stamp.ID,
 		Name:  stamp.Name,
