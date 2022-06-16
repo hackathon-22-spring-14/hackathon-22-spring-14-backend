@@ -79,9 +79,15 @@ components:
     stampRequest:
       required: true
       content:
-        application/json:
+        multipart/form-data:
           schema:
-            $ref: "#/components/schemas/Stamp"
+            type: object
+            properties:
+              name:
+                $ref: "#/components/schemas/Stamp/properties/name"
+              image:
+                type: string
+                format: binary
   responses:
     stamp:
       description: 成功
