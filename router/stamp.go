@@ -17,6 +17,8 @@ type Stamp struct {
 type StampHandler interface {
 	// GET /stamps
 	GetStamps(c echo.Context) error
+	// POST /stamps
+	PostStamp(c echo.Context) error
 	// GET /stamps/{stampID}
 	GetStamp(c echo.Context) error
 	// DELETE /stamps/{stampID}
@@ -52,6 +54,10 @@ func (h *stampHandler) GetStamps(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, stamps)
+}
+
+func (h *stampHandler) PostStamp(c echo.Context) error {
+	return nil
 }
 
 func (h *stampHandler) GetStamp(c echo.Context) error {
