@@ -24,6 +24,7 @@ func NewUserRepository(db *sqlx.DB) repository.UserRepository {
 }
 
 func (r *userRepository) Signup(newUser model.User) (model.User, string, error) { //いくら用--メモuserRepositoryの中にはdb
+	fmt.Println(newUser)
 	var addedUser model.User
 	var message string
 
@@ -44,7 +45,11 @@ func (r *userRepository) Signup(newUser model.User) (model.User, string, error) 
 	if err != nil {
 		return addedUser, message, err
 	}
-	addedUser = newUser
+	addedUser = model.User{
+		ID:       newUser.ID,
+		Name:     newUser.Name,
+		PassWord: newUser.PassWord,
+	}
 
 	return addedUser, message, nil
 }

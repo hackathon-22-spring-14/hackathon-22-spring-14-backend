@@ -18,8 +18,8 @@ type User struct {
 }
 
 type LoginRequestBody struct {
-	Name     string `json:"name,omitempty"`
-	PassWord string `json:"password,omitempty"`
+	Name     string `json:"name,omitempty" form:"name"`
+	PassWord string `json:"password,omitempty" form:"password"`
 }
 
 type LoginResponseBody struct {
@@ -46,7 +46,7 @@ func (h *userHandler) Signup(c echo.Context) error {
 	if er := c.Bind(&newUserReq); er != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, er.Error())
 	}
-
+	fmt.Println(newUserReq)
 	if newUserReq.Name == "" || newUserReq.PassWord == "" {
 		return echo.NewHTTPError(http.StatusBadRequest, "項目が空です!")
 	}
@@ -59,6 +59,7 @@ func (h *userHandler) Signup(c echo.Context) error {
 
 	//IDを生成
 	newUserID := uuid.New()
+	fmt.Println(newUserID)
 
 	newUser := model.User{
 		ID:       newUserID,
@@ -68,11 +69,15 @@ func (h *userHandler) Signup(c echo.Context) error {
 
 	addedUser, message, er := h.r.Signup(newUser)
 
+	fmt.Println(addedUser)
+	fmt.Println(message)
+	fmt.Println(er)
+
 	if message != "" {
 		return c.JSON(http.StatusConflict, message)
 	}
 
-	if err != nil {
+	if er != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, er.Error())
 	}
 
