@@ -2,6 +2,7 @@ package repository
 
 import (
 	"errors"
+	"io"
 	"strconv"
 
 	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/model"
@@ -9,13 +10,24 @@ import (
 
 type StampRepository interface {
 	FindAll(params *FindAllParams) ([]model.Stamp, error)
+	CreateStamp(args CreateStampArgs) (model.Stamp, error)
 	FindByID(stampID string) (model.Stamp, error)
 	DeleteByID(stampID string) error
+}
+
+type StampStrage interface {
+	UploadSingleObject(path string, image io.Reader) error
+	DownloadSingleObject(path string) (io.Reader, error)
 }
 
 type FindAllParams struct {
 	Limit  int
 	Offset int
+}
+
+type CreateStampArgs struct {
+	Name string
+	Image string
 }
 
 func NewFindAllParams(limitStr, offsetStr string) (*FindAllParams, error) {
