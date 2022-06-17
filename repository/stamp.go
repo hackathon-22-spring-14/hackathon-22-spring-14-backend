@@ -16,8 +16,8 @@ type StampRepository interface {
 }
 
 type StampStrage interface {
-	UploadSingleObject(path string, image io.Reader) error
-	DownloadSingleObject(path string) (io.Reader, error)
+	UploadSingleObject(path string, image string) error
+	DownloadSingleObject(path string) (string, error)
 }
 
 type FindAllParams struct {
