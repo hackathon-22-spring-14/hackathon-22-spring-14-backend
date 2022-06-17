@@ -7,12 +7,12 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func Setup(e *echo.Echo, db *sqlx.DB) {
+func Setup(e *echo.Echo, db *sqlx.DB, cfg aws.Config) {
 	e.Use(middleware.CORS())
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	sh := NewStampHandler(impl.NewStampRepository(db)) //いくら用メモ---shには、dbの入ったstampRepositoryの入ったstampHandlerが入っているけど、StampHandlerで返り値を指定しているから、GetStampsを呼び出せる。
+	sh := NewStampHandler(impl.NewStampRepository(db, impl.NewStampStrage(cfg))) //いくら用メモ---shには、dbの入ったstampRepositoryの入ったstampHandlerが入っているけど、StampHandlerで返り値を指定しているから、GetStampsを呼び出せる。
 	uh := NewUserHandler(impl.NewUserRepository(db))
 
 	api := e.Group("/api")

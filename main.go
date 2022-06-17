@@ -27,8 +27,13 @@ func main() {
 		time.Sleep(time.Second * time.Duration(i+1))
 	}
 
+    cfg, err := config.LoadDefaultConfig(context.Background())
+    if err != nil {
+        log.Fatal(err)
+    }
+
 	e := echo.New()
-	router.Setup(e, db)
+	router.Setup(e, db, cfg)
 
 	e.Logger.Fatal(e.Start(":3000"))
 }
