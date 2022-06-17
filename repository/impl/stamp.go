@@ -17,6 +17,7 @@ type Stamp struct {
 
 type stampRepository struct {
 	db *sqlx.DB
+	strage *stampStrage
 }
 
 func NewStampRepository(db *sqlx.DB) repository.StampRepository {
@@ -36,7 +37,7 @@ func (r *stampRepository) FindAll(params *repository.FindAllParams) ([]model.Sta
 		mstamps[i] = model.Stamp{
 			ID:    s.ID,
 			Name:  s.Name,
-			Image: getImage(s.ImageURL), // TODO: 可能ならまとめて取得する
+			Image: r.strage.DownloadSingleObject(s.ImageURL), // TODO: 可能ならまとめて取得する
 		}
 	}
 
@@ -52,7 +53,7 @@ func (r *stampRepository) FindByID(stampID string) (model.Stamp, error) {
 	mstamp := model.Stamp{
 		ID:    stamp.ID,
 		Name:  stamp.Name,
-		Image: getImage(stamp.ImageURL),
+		Image: r.strage.DownloadSingleObject(stamp.ImageURL),
 	}
 
 	return mstamp, nil
