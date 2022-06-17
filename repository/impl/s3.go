@@ -5,61 +5,67 @@ import (
     "io"
     "log"
     "os"
+    "encording/base64"
 
     "github.com/aws/aws-sdk-go-v2/aws"
     "github.com/aws/aws-sdk-go-v2/feature/s3/manager"
     "github.com/aws/aws-sdk-go-v2/service/s3"
 )
 
-type MyS3Client struct {
+const bucket = os.GETenv("BUCKET_NAME")
+
+type stampStrage struct {
     downloader *manager.Downloader
     uploader   *manager.Uploader
     client     *s3.Client
 }
 
-func NewMyS3Client(cfg aws.Config) *MyS3Client {
+func NewStampStrage(cfg aws.Config) *stampStrage {
+
     client := s3.NewFromConfig(cfg)
     downloader := manager.NewDownloader(client)
     uploader := manager.NewUploader(client)
 
-    return &MyS3Client{
+    return &stampStrage{
         downloader: downloader,
         uploader:   uploader,
         client:     client,
     }
 }
 
-
-
-// オブジェクトをアップロードするメソッド
-func (c *MyS3Client) UploadSingleObject(bucket, key string, reader io.Reader) {
+// オブジェクトをS3にアップロードする
+func (c *stampStrage) UploadSingleObject(path string, image io.Readeret) error {
     _, err := c.uploader.Upload(context.Background(), &s3.PutObjectInput{
         Bucket: aws.String(bucket),
         Key:    aws.String(key),
-        Body:   reader,
+        Body:   image,
     })
 
     if err != nil {
         log.Fatal(err)
+        return err
     }
 
-    log.Println("upload successed")
+    return nil
 }
 
-// オブジェクトをダウンロードするメソッド
-func (c *MyS3Client) DownloadSingleObject(path string) {
-    file, _ := os.Create(filename)
-    defer file.Close()
+// オブジェクトをS3からダウンロードする
+func (c *stampStrage) DownloadSingleObject(path string) error {
 
-    _, err := c.downloader.Download(context.Background(), file, &s3.GetObjectInput{
+    buffer := manager.NewWriteAtBuffer([]byte{})
+
+    numBytes, err := c.downloader.Download(context.TODO(), buffer, &s3.GetObjectInput{
         Bucket: aws.String(bucket),
-        Key:    aws.String(key),
+        Key:    aws.String(path),
     })
 
     if err != nil {
-        log.Fatal(err)
+        return nil, err
     }
 
-    log.Println("download successed")
+    if numBytes < 1 {
+        return nil, errors.New("zero bytes written to memory")
+    }
 
+    return base64.StdEncoding.EncodeToString(buffer.Bytes(),) nil
 }
