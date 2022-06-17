@@ -13,7 +13,7 @@ func Setup(e *echo.Echo, db *sqlx.DB) {
 	e.Use(middleware.Recover())
 
 	sh := NewStampHandler(impl.NewStampRepository(db)) //いくら用メモ---shには、dbの入ったstampRepositoryの入ったstampHandlerが入っているけど、StampHandlerで返り値を指定しているから、GetStampsを呼び出せる。
-	uh := NewUserHandler(impl.NewUserRepository(db))
+	uh := NewUserHandler(impl.NewUserRepository(db))   //いくら用メモ---uhには、dbの入ったuserRepositoryの入ったuserHandlerが入っているけど、UserHandlerで返り値を指定しているから、Signupとかを呼び出せる。
 
 	api := e.Group("/api")
 
