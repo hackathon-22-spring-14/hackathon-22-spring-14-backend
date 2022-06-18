@@ -1,11 +1,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/router"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
@@ -27,8 +29,13 @@ func main() {
 		time.Sleep(time.Second * time.Duration(i+1))
 	}
 
+	cfg, err := config.LoadDefaultConfig(context.TODO())
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	e := echo.New()
-	router.Setup(e, db)
+	router.Setup(e, db, cfg)
 
 	e.Logger.Fatal(e.Start(":3000"))
 }
