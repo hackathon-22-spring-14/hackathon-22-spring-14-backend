@@ -9,6 +9,7 @@ import (
 
 type StampRepository interface {
 	FindAll(params *FindAllParams) ([]model.Stamp, error)
+	FindByUserID(userID string) ([]model.Stamp, error)
 	CreateStamp(stamp model.Stamp) (model.Stamp, error)
 	FindByID(stampID string) (model.Stamp, error)
 	DeleteByID(stampID string) error

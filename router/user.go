@@ -74,14 +74,6 @@ func (h *userHandler) Signup(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, er.Error())
 	}
 
-	sess, err := session.Get("sessions", c)
-	if err != nil {
-		fmt.Println(err)
-		return c.String(http.StatusInternalServerError, "something wrong in getting session")
-	}
-	sess.Values["userID"] = newUserReq.ID
-	sess.Save(c.Request(), c.Response())
-
 	return c.JSON(http.StatusCreated, "success creating a user")
 }
 
@@ -112,7 +104,15 @@ func (h *userHandler) Login(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, er)
 
 	}
-	// TODO: implement
+
+	sess, err := session.Get("sessions", c)
+	if err != nil {
+		fmt.Println(err)
+		return c.String(http.StatusInternalServerError, "something wrong in getting session")
+	}
+	sess.Values["userID"] = loginReq.ID
+	sess.Save(c.Request(), c.Response())
+
 	return c.JSON(http.StatusOK, "success loging in")
 }
 

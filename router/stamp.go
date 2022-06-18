@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/model"
 	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/repository"
+	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 )
 
@@ -36,6 +37,8 @@ type StampHandler interface {
 	GetStamp(c echo.Context) error
 	// DELETE /stamps/{stampID}
 	DeleteStamp(c echo.Context) error
+	// GET /stamps/me
+	GetStampMe(c echo.Context) error
 }
 
 type stampHandler struct {
@@ -114,6 +117,27 @@ func (h *stampHandler) GetStamp(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, stamp)
+}
+
+func (h *stampHandler) GetStampMe(c echo.Context) error {
+	sess, _ := session.Get("sessions", c)
+	userID := sess.Values["userID"].(string)
+	mstamps, err := h.r.FindByUserID(userID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	stamps := make([]Stamp, len(mstamps))
+	for i, ms := range mstamps {
+		stamps[i] = Stamp{
+			ID:     ms.ID,
+			Name:   ms.Name,
+			Image:  ms.Image,
+			UserID: ms.UserID,
+		}
+	}
+
+	return c.JSON(http.StatusOK, stamps)
 }
 
 func (h *stampHandler) DeleteStamp(c echo.Context) error {
