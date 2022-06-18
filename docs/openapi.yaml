@@ -80,6 +80,15 @@ paths:
         "200":
           description: "success"
       operationId: login
+  "/users/whoami":
+    get:
+      tags:
+        - user
+      description: セッションの確認
+      responses:
+        "200":
+          description: "success"
+      operationId: whoami
 
 components:
   parameters:
