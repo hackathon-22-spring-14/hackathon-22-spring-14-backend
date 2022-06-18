@@ -9,8 +9,8 @@ import (
 )
 
 type User struct {
-	ID       string `db:"id"`
-	PassWord string `db:"password"`
+	ID        string `db:"id"`
+	PassWord  string `db:"password"`
 	CreatedAt string `db:"created_at"`
 }
 
