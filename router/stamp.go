@@ -19,11 +19,6 @@ type Stamp struct {
 	UserID string    `json:"user_id"`
 }
 
-type PostStampRequestBody struct {
-	Name  string `json:"name,omitempty" form:"name"`
-	Image string `json:"image,omitempty" form:"image"`
-}
-
 type resPostStamp struct {
 	ID string
 }
@@ -74,8 +69,9 @@ func (h *stampHandler) GetStamps(c echo.Context) error {
 }
 
 func (h *stampHandler) PostStamp(c echo.Context) error {
+	sess, _ := session.Get("sessions", c)
+	userID := sess.Values["userID"].(string)
 	name := c.FormValue("name")
-	user_id := c.FormValue("user_id")
 	imageFileHeader, err := c.FormFile("image")
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
@@ -92,7 +88,7 @@ func (h *stampHandler) PostStamp(c echo.Context) error {
 		ID:     uuid.New(),
 		Name:   name,
 		Image:  base64.StdEncoding.EncodeToString(imageByte),
-		UserID: user_id,
+		UserID: userID,
 	}
 	_, err = h.r.CreateStamp(mstamp)
 	if err != nil {
