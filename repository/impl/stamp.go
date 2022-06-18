@@ -1,6 +1,8 @@
 package impl
 
 import (
+	"fmt"
+
 	"github.com/google/uuid"
 	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/model"
 	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/repository"
@@ -37,6 +39,31 @@ func (r *stampRepository) FindAll(params *repository.FindAllParams) ([]model.Sta
 		return nil, err
 	}
 
+	mstamps := make([]model.Stamp, len(stamps))
+	for i, s := range stamps {
+		image, err := r.strage.DownloadSingleObject(s.ImageURL)
+		if err != nil {
+			return nil, err
+		}
+		mstamps[i] = model.Stamp{
+			ID:     s.ID,
+			Name:   s.Name,
+			Image:  image, // TODO: 可能ならまとめて取得する
+			UserID: s.UserID,
+		}
+	}
+
+	return mstamps, nil
+}
+
+func (r *stampRepository) FindByUserID(userID string) ([]model.Stamp, error) {
+	stamps := []Stamp{}
+	fmt.Println(userID)
+	err := r.db.Select(&stamps, "SELECT * FROM stamps WHERE user_id = ?", userID)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(stamps)
 	mstamps := make([]model.Stamp, len(stamps))
 	for i, s := range stamps {
 		image, err := r.strage.DownloadSingleObject(s.ImageURL)
