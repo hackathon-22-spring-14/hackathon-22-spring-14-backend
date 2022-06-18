@@ -32,6 +32,7 @@ func Setup(e *echo.Echo, db *sqlx.DB, cfg aws.Config) {
 	apiStamps.POST("", sh.PostStamp)
 	apiStamps.GET("/:stampID", sh.GetStamp)
 	apiStamps.DELETE("/:stampID", sh.DeleteStamp)
+	apiStamps.GET("/me", sh.GetStampMe)
 
 	apiUsers := api.Group("/users")
 	apiUsers.POST("/signup", uh.Signup)
