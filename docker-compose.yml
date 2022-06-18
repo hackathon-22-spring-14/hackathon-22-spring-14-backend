@@ -5,7 +5,7 @@ services:
     build: .
     restart: always
     environment:
-      - MYSQL_HOST=hackathon-22-spring-14-backend-db-1
+      - MYSQL_HOST=db
     ports:
       - '3000:3000'
     volumes:
@@ -17,9 +17,12 @@ services:
 
   db:
     image: mysql:8.0.29
+    container_name: db
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: hackathon
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
     volumes:
       - ./mysql/init:/docker-entrypoint-initdb.d
+    ports:
+      - '3306:3306'
