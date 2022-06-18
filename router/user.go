@@ -1,6 +1,7 @@
 package router
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -66,10 +67,36 @@ func (h *userHandler) Signup(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, er.Error())
 	}
 
-	return c.JSON(http.StatusOK, "success creating a user")
+	return c.JSON(http.StatusCreated, "success creating a user")
 }
 
 func (h *userHandler) Login(c echo.Context) error {
+	loginReq := LoginRequestBody{}
+	if er := c.Bind(&loginReq); er != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, er.Error())
+	}
+	if loginReq.ID == "" || loginReq.PassWord == "" {
+		return echo.NewHTTPError(http.StatusBadRequest, "項目が空です!")
+	}
+
+	user := model.User{
+		ID:       loginReq.ID,
+		PassWord: loginReq.PassWord,
+	}
+
+	message, er := h.r.Login(user)
+	if er != nil {
+		fmt.Println(er)
+		if message != "" {
+			return c.JSON(http.StatusForbidden, message)
+		}
+		if errors.Is(er, bcrypt.ErrMismatchedHashAndPassword) {
+			return c.JSON(http.StatusForbidden, "the password is wrong")
+		}
+		
+		return c.JSON(http.StatusInternalServerError, er)
+		
+	}
 	// TODO: implement
-	return nil
+	return c.JSON(http.StatusOK, "success loging in")
 }

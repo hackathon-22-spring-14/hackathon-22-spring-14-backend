@@ -6,5 +6,5 @@ import (
 
 type UserRepository interface {
 	Signup(newUser model.User) (model.User, string, error)
-	Login() error
+	Login(user model.User) (string, error)
 }
