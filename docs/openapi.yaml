@@ -156,6 +156,9 @@ components:
           type: string
           format: byte
           description: base64エンコードされた画像
+        user_id:
+          type: string
+          description: ユーザーID
     Id:
       type: string
       format: uuid
