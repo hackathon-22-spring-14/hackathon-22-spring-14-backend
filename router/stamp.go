@@ -1,9 +1,12 @@
 package router
 
 import (
+	"encoding/base64"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/google/uuid"
+	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/model"
 	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/repository"
 	"github.com/labstack/echo/v4"
 )
@@ -12,6 +15,15 @@ type Stamp struct {
 	ID    uuid.UUID `json:"id"`
 	Name  string    `json:"name"`
 	Image string    `json:"image"`
+}
+
+type PostStampRequestBody struct {
+	Name  string `json:"name,omitempty" form:"name"`
+	Image string `json:"image,omitempty" form:"image"`
+}
+
+type resPostStamp struct {
+	ID string
 }
 
 type StampHandler interface {
@@ -57,7 +69,31 @@ func (h *stampHandler) GetStamps(c echo.Context) error {
 }
 
 func (h *stampHandler) PostStamp(c echo.Context) error {
-	return nil
+	imageFileHeader, err := c.FormFile("image")
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	name := c.FormValue("name")
+	imageFile, err := imageFileHeader.Open()
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	imageByte, err := ioutil.ReadAll(imageFile)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	mstamp := model.Stamp{
+		ID:    uuid.New(),
+		Name:  name,
+		Image: base64.StdEncoding.EncodeToString(imageByte),
+	}
+	_, err = h.r.CreateStamp(mstamp)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, resPostStamp{
+		ID: mstamp.ID.String(),
+	})
 }
 
 func (h *stampHandler) GetStamp(c echo.Context) error {
