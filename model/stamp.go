@@ -6,4 +6,5 @@ type Stamp struct {
 	ID    uuid.UUID
 	Name  string
 	Image string
+	UserID string
 }

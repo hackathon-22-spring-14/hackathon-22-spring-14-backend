@@ -15,6 +15,7 @@ type Stamp struct {
 	ID    uuid.UUID `json:"id"`
 	Name  string    `json:"name"`
 	Image string    `json:"image"`
+	UserID string `json:"user_id"`
 }
 
 type PostStampRequestBody struct {
@@ -62,6 +63,7 @@ func (h *stampHandler) GetStamps(c echo.Context) error {
 			ID:    ms.ID,
 			Name:  ms.Name,
 			Image: ms.Image,
+			UserID: ms.UserID,
 		}
 	}
 
@@ -69,11 +71,12 @@ func (h *stampHandler) GetStamps(c echo.Context) error {
 }
 
 func (h *stampHandler) PostStamp(c echo.Context) error {
+	name := c.FormValue("name")
+	user_id := c.FormValue("user_id")
 	imageFileHeader, err := c.FormFile("image")
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	name := c.FormValue("name")
 	imageFile, err := imageFileHeader.Open()
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
@@ -86,6 +89,7 @@ func (h *stampHandler) PostStamp(c echo.Context) error {
 		ID:    uuid.New(),
 		Name:  name,
 		Image: base64.StdEncoding.EncodeToString(imageByte),
+		UserID: user_id,
 	}
 	_, err = h.r.CreateStamp(mstamp)
 	if err != nil {
@@ -106,6 +110,7 @@ func (h *stampHandler) GetStamp(c echo.Context) error {
 		ID:    mstamp.ID,
 		Name:  mstamp.Name,
 		Image: mstamp.Image,
+		UserID: mstamp.UserID,
 	}
 
 	return c.JSON(http.StatusOK, stamp)
