@@ -8,6 +8,7 @@ import (
 	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/model"
 	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/repository"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo-contrib/session"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -21,11 +22,17 @@ type LoginRequestBody struct {
 	PassWord string `json:"password,omitempty" form:"password"`
 }
 
+type Me struct {
+	UserID string `json:"user_id,omitempty"  db:"user_id"`
+}
+
 type UserHandler interface {
 	// POST /users/signup
 	Signup(c echo.Context) error
 	// POST /users/login
 	Login(c echo.Context) error
+	// GET /users/whoami
+	GetWhoAmIHandler(c echo.Context) error
 }
 
 type userHandler struct {
@@ -67,6 +74,14 @@ func (h *userHandler) Signup(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, er.Error())
 	}
 
+	sess, err := session.Get("sessions", c)
+	if err != nil {
+		fmt.Println(err)
+		return c.String(http.StatusInternalServerError, "something wrong in getting session")
+	}
+	sess.Values["userID"] = newUserReq.ID
+	sess.Save(c.Request(), c.Response())
+
 	return c.JSON(http.StatusCreated, "success creating a user")
 }
 
@@ -99,4 +114,12 @@ func (h *userHandler) Login(c echo.Context) error {
 	}
 	// TODO: implement
 	return c.JSON(http.StatusOK, "success loging in")
+}
+
+func (h *userHandler) GetWhoAmIHandler(c echo.Context) error {
+	sess, _ := session.Get("sessions", c)
+  
+	return c.JSON(http.StatusOK, Me{
+		UserID: sess.Values["userID"].(string),
+	})
 }
