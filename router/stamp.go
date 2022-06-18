@@ -1,22 +1,37 @@
 package router
 
 import (
+	"encoding/base64"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/google/uuid"
+	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/model"
 	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/repository"
 	"github.com/labstack/echo/v4"
 )
 
 type Stamp struct {
-	ID    uuid.UUID `json:"id"`
-	Name  string    `json:"name"`
-	Image string    `json:"image"`
+	ID     uuid.UUID `json:"id"`
+	Name   string    `json:"name"`
+	Image  string    `json:"image"`
+	UserID string    `json:"user_id"`
+}
+
+type PostStampRequestBody struct {
+	Name  string `json:"name,omitempty" form:"name"`
+	Image string `json:"image,omitempty" form:"image"`
+}
+
+type resPostStamp struct {
+	ID string
 }
 
 type StampHandler interface {
 	// GET /stamps
 	GetStamps(c echo.Context) error
+	// POST /stamps
+	PostStamp(c echo.Context) error
 	// GET /stamps/{stampID}
 	GetStamp(c echo.Context) error
 	// DELETE /stamps/{stampID}
@@ -45,13 +60,44 @@ func (h *stampHandler) GetStamps(c echo.Context) error {
 	stamps := make([]Stamp, len(mstamps))
 	for i, ms := range mstamps {
 		stamps[i] = Stamp{
-			ID:    ms.ID,
-			Name:  ms.Name,
-			Image: ms.Image,
+			ID:     ms.ID,
+			Name:   ms.Name,
+			Image:  ms.Image,
+			UserID: ms.UserID,
 		}
 	}
 
 	return c.JSON(http.StatusOK, stamps)
+}
+
+func (h *stampHandler) PostStamp(c echo.Context) error {
+	name := c.FormValue("name")
+	user_id := c.FormValue("user_id")
+	imageFileHeader, err := c.FormFile("image")
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	imageFile, err := imageFileHeader.Open()
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	imageByte, err := ioutil.ReadAll(imageFile)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	mstamp := model.Stamp{
+		ID:     uuid.New(),
+		Name:   name,
+		Image:  base64.StdEncoding.EncodeToString(imageByte),
+		UserID: user_id,
+	}
+	_, err = h.r.CreateStamp(mstamp)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, resPostStamp{
+		ID: mstamp.ID.String(),
+	})
 }
 
 func (h *stampHandler) GetStamp(c echo.Context) error {
@@ -61,9 +107,10 @@ func (h *stampHandler) GetStamp(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 	stamp := Stamp{
-		ID:    mstamp.ID,
-		Name:  mstamp.Name,
-		Image: mstamp.Image,
+		ID:     mstamp.ID,
+		Name:   mstamp.Name,
+		Image:  mstamp.Image,
+		UserID: mstamp.UserID,
 	}
 
 	return c.JSON(http.StatusOK, stamp)
