@@ -10,9 +10,11 @@ import (
 )
 
 type Stamp struct {
-	ID       uuid.UUID `db:"id"`
-	Name     string    `db:"name"`
-	ImageURL string    `db:"image_url"`
+	ID        uuid.UUID `db:"id"`
+	Name      string    `db:"name"`
+	ImageURL  string    `db:"image_url"`
+	CreatedAt string    `db:"created_at"`
+	UserID    string    `db:"user_id"`
 }
 
 type stampRepository struct {
@@ -42,9 +44,10 @@ func (r *stampRepository) FindAll(params *repository.FindAllParams) ([]model.Sta
 			return nil, err
 		}
 		mstamps[i] = model.Stamp{
-			ID:    s.ID,
-			Name:  s.Name,
-			Image: image, // TODO: 可能ならまとめて取得する
+			ID:     s.ID,
+			Name:   s.Name,
+			Image:  image, // TODO: 可能ならまとめて取得する
+			UserID: s.UserID,
 		}
 	}
 
@@ -61,8 +64,11 @@ func (r *stampRepository) CreateStamp(mstamp model.Stamp) (model.Stamp, error) {
 		ID:       mstamp.ID,
 		Name:     mstamp.Name,
 		ImageURL: image_url,
+		UserID:   mstamp.UserID,
 	}
-	_, err = r.db.Exec("insert into stamps (id, name, image_url) values (?,?,?)", stamp.ID.String(), stamp.Name, stamp.ImageURL)
+	_, err = r.db.Exec(
+		"insert into stamps (id, name, image_url, user_id) values (?,?,?,?)", stamp.ID.String(), stamp.Name, stamp.ImageURL, stamp.CreatedAt, stamp.UserID,
+	)
 	if err != nil {
 		return mstamp, err
 	}
@@ -80,9 +86,10 @@ func (r *stampRepository) FindByID(stampID string) (model.Stamp, error) {
 		return model.Stamp{}, err
 	}
 	mstamp := model.Stamp{
-		ID:    stamp.ID,
-		Name:  stamp.Name,
-		Image: image,
+		ID:     stamp.ID,
+		Name:   stamp.Name,
+		Image:  image,
+		UserID: stamp.UserID,
 	}
 
 	return mstamp, nil

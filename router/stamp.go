@@ -12,9 +12,10 @@ import (
 )
 
 type Stamp struct {
-	ID    uuid.UUID `json:"id"`
-	Name  string    `json:"name"`
-	Image string    `json:"image"`
+	ID     uuid.UUID `json:"id"`
+	Name   string    `json:"name"`
+	Image  string    `json:"image"`
+	UserID string    `json:"user_id"`
 }
 
 type PostStampRequestBody struct {
@@ -59,9 +60,10 @@ func (h *stampHandler) GetStamps(c echo.Context) error {
 	stamps := make([]Stamp, len(mstamps))
 	for i, ms := range mstamps {
 		stamps[i] = Stamp{
-			ID:    ms.ID,
-			Name:  ms.Name,
-			Image: ms.Image,
+			ID:     ms.ID,
+			Name:   ms.Name,
+			Image:  ms.Image,
+			UserID: ms.UserID,
 		}
 	}
 
@@ -69,11 +71,12 @@ func (h *stampHandler) GetStamps(c echo.Context) error {
 }
 
 func (h *stampHandler) PostStamp(c echo.Context) error {
+	name := c.FormValue("name")
+	user_id := c.FormValue("user_id")
 	imageFileHeader, err := c.FormFile("image")
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	name := c.FormValue("name")
 	imageFile, err := imageFileHeader.Open()
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
@@ -83,9 +86,10 @@ func (h *stampHandler) PostStamp(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 	mstamp := model.Stamp{
-		ID:    uuid.New(),
-		Name:  name,
-		Image: base64.StdEncoding.EncodeToString(imageByte),
+		ID:     uuid.New(),
+		Name:   name,
+		Image:  base64.StdEncoding.EncodeToString(imageByte),
+		UserID: user_id,
 	}
 	_, err = h.r.CreateStamp(mstamp)
 	if err != nil {
@@ -103,9 +107,10 @@ func (h *stampHandler) GetStamp(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 	stamp := Stamp{
-		ID:    mstamp.ID,
-		Name:  mstamp.Name,
-		Image: mstamp.Image,
+		ID:     mstamp.ID,
+		Name:   mstamp.Name,
+		Image:  mstamp.Image,
+		UserID: mstamp.UserID,
 	}
 
 	return c.JSON(http.StatusOK, stamp)
