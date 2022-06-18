@@ -7,8 +7,8 @@ import (
 
 	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/model"
 	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/repository"
-	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo-contrib/session"
+	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -108,9 +108,9 @@ func (h *userHandler) Login(c echo.Context) error {
 		if errors.Is(er, bcrypt.ErrMismatchedHashAndPassword) {
 			return c.JSON(http.StatusForbidden, "the password is wrong")
 		}
-		
+
 		return c.JSON(http.StatusInternalServerError, er)
-		
+
 	}
 	// TODO: implement
 	return c.JSON(http.StatusOK, "success loging in")
@@ -118,7 +118,7 @@ func (h *userHandler) Login(c echo.Context) error {
 
 func (h *userHandler) GetWhoAmIHandler(c echo.Context) error {
 	sess, _ := session.Get("sessions", c)
-  
+
 	return c.JSON(http.StatusOK, Me{
 		UserID: sess.Values["userID"].(string),
 	})

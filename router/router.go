@@ -6,11 +6,10 @@ import (
 	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/router/internal"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo-contrib/session"
-	"github.com/srinathgs/mysqlstore"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/srinathgs/mysqlstore"
 )
-
 
 func Setup(e *echo.Echo, db *sqlx.DB, cfg aws.Config) {
 	store, err := mysqlstore.NewMySQLStoreFromConnection(db.DB, "sessions", "/", 60*60*24*14, []byte("secret-token"))
@@ -26,7 +25,7 @@ func Setup(e *echo.Echo, db *sqlx.DB, cfg aws.Config) {
 	uh := NewUserHandler(impl.NewUserRepository(db))                             //いくら用メモ---uhには、dbの入ったuserRepositoryの入ったuserHandlerが入っているけど、UserHandlerで返り値を指定しているから、Signupとかを呼び出せる。
 
 	api := e.Group("/api")
-	
+
 	apiStamps := api.Group("/stamps")
 	apiStamps.Use(internal.CheckLogin)
 	apiStamps.GET("", sh.GetStamps)
