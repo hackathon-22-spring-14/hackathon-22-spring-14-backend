@@ -22,5 +22,5 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 -- TODO: テストデータを後で消す
 INSERT INTO `users` (`id`, `password`) VALUES
-('user1', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'), -- password="password"
-('user2', '6cf615d5bcaac778352a8f1f3360d23f02f34ec182e259897fd6ce485d7870d4'); -- password="password2"
+('user1', '$2a$10$.pn8EY6zCytzgV3JW5dXYeZ2xnsUI2cmuCsFbbYlsuGGotKx4qOhO'), -- password="password"
+('user2', '$2a$10$777RHmBriDm7ilr64wim8OaQCAMiqzVS.Dwn.UnqlOSJDwcWxUi1m'); -- password="password2",bcrypt

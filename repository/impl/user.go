@@ -6,6 +6,7 @@ import (
 	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/model"
 	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/repository"
 	"github.com/jmoiron/sqlx"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
@@ -22,7 +23,6 @@ func NewUserRepository(db *sqlx.DB) repository.UserRepository {
 }
 
 func (r *userRepository) Signup(newUser model.User) (model.User, string, error) { //いくら用--メモuserRepositoryの中にはdb
-	fmt.Println(newUser)
 	var addedUser model.User
 	var message string
 
@@ -51,6 +51,17 @@ func (r *userRepository) Signup(newUser model.User) (model.User, string, error) 
 	return addedUser, message, nil
 }
 
-func (r *userRepository) Login() error {
-	return nil
+func (r *userRepository) Login(user model.User) (string, error) {
+	var userFromDB User
+	err := r.db.Get(&userFromDB, "select * from users where id=?", user.ID)
+	if err != nil {
+		return "error in the database (such id may not exist)", err
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(userFromDB.PassWord), []byte(user.PassWord))
+	if err != nil {
+		return "", err
+	}
+
+	return "", nil
 }
