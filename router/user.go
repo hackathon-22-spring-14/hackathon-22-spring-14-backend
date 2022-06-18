@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/google/uuid"
 	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/model"
 	"github.com/hackathon-22-spring-14/hackathon-22-spring-14-backend/repository"
 	"github.com/labstack/echo/v4"
@@ -12,18 +11,13 @@ import (
 )
 
 type User struct {
-	ID       uuid.UUID `json:"id,omitempty"`
-	Name     string    `json:"name,omitempty"`
-	PassWord string    `json:"password,omitempty"`
+	ID       string `json:"id,omitempty"`
+	PassWord string `json:"password,omitempty"`
 }
 
 type LoginRequestBody struct {
-	Name     string `json:"name,omitempty" form:"name"`
+	ID       string `json:"id,omitempty" form:"id"`
 	PassWord string `json:"password,omitempty" form:"password"`
-}
-
-type LoginResponseBody struct {
-	ID uuid.UUID `json:"id,omitempty"`
 }
 
 type UserHandler interface {
@@ -47,7 +41,7 @@ func (h *userHandler) Signup(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, er.Error())
 	}
 	fmt.Println(newUserReq)
-	if newUserReq.Name == "" || newUserReq.PassWord == "" {
+	if newUserReq.ID == "" || newUserReq.PassWord == "" {
 		return echo.NewHTTPError(http.StatusBadRequest, "項目が空です!")
 	}
 
@@ -57,21 +51,12 @@ func (h *userHandler) Signup(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("bcrypt generate error: %v", err))
 	}
 
-	//IDを生成
-	newUserID := uuid.New()
-	fmt.Println(newUserID)
-
 	newUser := model.User{
-		ID:       newUserID,
-		Name:     newUserReq.Name,
+		ID:       newUserReq.ID,
 		PassWord: string(hashedPass),
 	}
 
-	addedUser, message, er := h.r.Signup(newUser)
-
-	fmt.Println(addedUser)
-	fmt.Println(message)
-	fmt.Println(er)
+	_, message, er := h.r.Signup(newUser)
 
 	if message != "" {
 		return c.JSON(http.StatusConflict, message)
@@ -81,9 +66,7 @@ func (h *userHandler) Signup(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, er.Error())
 	}
 
-	res := LoginResponseBody{ID: addedUser.ID}
-
-	return c.JSON(http.StatusOK, res)
+	return c.JSON(http.StatusOK, "success creating a user")
 }
 
 func (h *userHandler) Login(c echo.Context) error {
