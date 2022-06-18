@@ -50,6 +50,37 @@ paths:
         "204":
           description: "success"
       operationId: deleteStamp
+  "/users/signup":
+    post:
+      tags:
+        - user
+      description: ユーザーを登録
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: "success"
+      operationId: createUser
+  "/users/login":
+    post:
+      tags:
+        - user
+      description: ログイン
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: "success"
+      operationId: login
+
 components:
   parameters:
     stampId:
@@ -130,5 +161,13 @@ components:
           type: string
           format: binary
           description: スタンプ画像
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        password:
+          type: string
+
 tags:
   - name: stamp
