@@ -89,6 +89,16 @@ paths:
         "200":
           description: "success"
       operationId: whoami
+  "/users/{userID}/stamps":
+    get:
+      tags:
+        - user
+      description: 自分が作ったスタンプを取得
+      responses:
+        "200":
+          $ref: "#/components/responses/stamps"
+          description: "success"
+      operationId: stampsme
 
 components:
   parameters:
