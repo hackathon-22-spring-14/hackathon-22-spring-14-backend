@@ -1,8 +1,6 @@
 package router
 
 import (
-	"encoding/base64"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -72,14 +70,14 @@ func (h *stampHandler) PostStamp(c echo.Context) error {
 	sess, _ := session.Get("sessions", c)
 	userID := sess.Values["userID"].(string)
 	name := c.FormValue("name")
-	imageFileHeader, err := c.FormValue("image")
+	imageFileHeader := c.FormValue("image")
 	mstamp := model.Stamp{
 		ID:     uuid.New(),
 		Name:   name,
 		Image:  imageFileHeader,
 		UserID: userID,
 	}
-	_, err = h.r.CreateStamp(mstamp)
+	_, err := h.r.CreateStamp(mstamp)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}

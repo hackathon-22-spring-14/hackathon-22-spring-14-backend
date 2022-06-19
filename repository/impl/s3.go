@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/base64"
 	"errors"
-	"log"
+	"fmt"
 	"os"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -37,7 +37,7 @@ func NewStampStrage(cfg aws.Config) *stampStrage {
 func (c *stampStrage) UploadSingleObject(path string, image string) error {
 	imageByte, err := base64.StdEncoding.DecodeString(image)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	imageReadeer := bytes.NewReader(imageByte)
@@ -47,9 +47,7 @@ func (c *stampStrage) UploadSingleObject(path string, image string) error {
 		Key:    aws.String(path),
 		Body:   imageReadeer,
 	})
-
 	if err != nil {
-		log.Fatal(err)
 		return err
 	}
 

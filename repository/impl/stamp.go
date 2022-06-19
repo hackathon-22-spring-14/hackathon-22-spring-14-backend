@@ -85,7 +85,7 @@ func (r *stampRepository) CreateStamp(mstamp model.Stamp) (model.Stamp, error) {
 	image_url := uuid.NewString()
 	err := r.strage.UploadSingleObject(image_url, mstamp.Image)
 	if err != nil {
-		return mstamp, nil
+		return mstamp, err
 	}
 	stamp := Stamp{
 		ID:       mstamp.ID,
