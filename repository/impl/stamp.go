@@ -94,7 +94,7 @@ func (r *stampRepository) CreateStamp(mstamp model.Stamp) (model.Stamp, error) {
 		UserID:   mstamp.UserID,
 	}
 	_, err = r.db.Exec(
-		"insert into stamps (id, name, image_url, user_id) values (?,?,?,?)", stamp.ID.String(), stamp.Name, stamp.ImageURL, stamp.CreatedAt, stamp.UserID,
+		"insert into stamps (id, name, image_url, user_id) values (?,?,?,?)", stamp.ID.String(), stamp.Name, stamp.ImageURL, stamp.UserID,
 	)
 	if err != nil {
 		return mstamp, err

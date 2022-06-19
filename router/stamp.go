@@ -72,22 +72,11 @@ func (h *stampHandler) PostStamp(c echo.Context) error {
 	sess, _ := session.Get("sessions", c)
 	userID := sess.Values["userID"].(string)
 	name := c.FormValue("name")
-	imageFileHeader, err := c.FormFile("image")
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-	imageFile, err := imageFileHeader.Open()
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-	imageByte, err := ioutil.ReadAll(imageFile)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
+	imageFileHeader, err := c.FormValue("image")
 	mstamp := model.Stamp{
 		ID:     uuid.New(),
 		Name:   name,
-		Image:  base64.StdEncoding.EncodeToString(imageByte),
+		Image:  imageFileHeader,
 		UserID: userID,
 	}
 	_, err = h.r.CreateStamp(mstamp)
