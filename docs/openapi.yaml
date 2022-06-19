@@ -89,10 +89,10 @@ paths:
         "200":
           description: "success"
       operationId: whoami
-  "/users/{userID}/stamps":
+  "/stamps/me":
     get:
       tags:
-        - user
+        - stamp
       description: 自分が作ったスタンプを取得
       responses:
         "200":
