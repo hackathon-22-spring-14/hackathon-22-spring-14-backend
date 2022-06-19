@@ -20,7 +20,7 @@ services:
     container_name: db
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: hackathon
+      MYSQL_DATABASE: stamq
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
     volumes:
       - ./mysql/init:/docker-entrypoint-initdb.d

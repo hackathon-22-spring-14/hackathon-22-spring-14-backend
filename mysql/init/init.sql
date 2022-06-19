@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS hackathon;
-CREATE DATABASE hackathon;
-USE hackathon;
+DROP DATABASE IF EXISTS stamq;
+CREATE DATABASE stamq;
+USE stamq;
 
 CREATE TABLE IF NOT EXISTS `users` (
   `id` varchar(32) NOT NULL,

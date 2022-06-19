@@ -43,11 +43,11 @@ func main() {
 func getDSN() string {
 	return fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?parseTime=True&loc=Asia%%2FTokyo&charset=utf8mb4",
-		getEnvOrDefault("MYSQL_USER", "root"),
-		getEnvOrDefault("MYSQL_PASSWORD", "password"),
-		getEnvOrDefault("MYSQL_HOST", "localhost"),
-		getEnvOrDefault("MYSQL_PORT", "3306"),
-		getEnvOrDefault("MYSQL_DATABASE", "hackathon"), // TODO: サービス名に変える
+		getEnvOrDefault("DB_USER", "root"),
+		getEnvOrDefault("DB_PASS", "password"),
+		getEnvOrDefault("DB_HOST", "localhost"),
+		getEnvOrDefault("DB_PORT", "3306"),
+		getEnvOrDefault("DB_NAME", "stamq"), // TODO: サービス名に変える
 	)
 }
 
