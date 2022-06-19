@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/base64"
 	"errors"
-	"fmt"
 	"os"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
